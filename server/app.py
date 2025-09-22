@@ -7,7 +7,6 @@ from langchain_tavily import TavilySearch
 from langgraph.checkpoint.memory import MemorySaver
 from uuid import uuid4
 import json
-from rich import print as rprint
 from langchain_core.messages import AIMessage, AIMessageChunk, HumanMessage, ToolMessage
 from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse

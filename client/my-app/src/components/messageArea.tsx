@@ -3,96 +3,103 @@ import React from "react";
 const SearchStages = ({ searchInfo }) => {
   if (!searchInfo || !searchInfo.stages || searchInfo.stages.length === 0)
     return null;
+
   return (
-    <div className="relative">
+    <div className=" text-black py-2 font-mono ">
       {console.log(">", searchInfo)}
 
-      <div className="flex flex-col space-y-4 text-sm text-gray-700">
-        {searchInfo.stages.includes("searching") && (
-          <div className="relative">
-            <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-teal-400 rounded-full z-10 shadow-sm"></div>
-            {searchInfo.stages.includes("reading") && (
-              <div className="absolute -left-[7px] top-3 w-0.5 h-[calc(100%+1rem)] bg-gradient-to-b from-teal-300 to-teal-200"></div>
-            )}
-            <div className="flex flex-col">
-              <span className="font-medium mb-2 ml-2">Searching the web</span>
-              <div className="flex flex-wrap gap-2 pl-2 mt-1">
-                <div className="bg-gray-100 text-xs px-3 py-1.5 rounded border border-gray-200 inline-flex items-center">
-                  <svg
-                    className="w-3 h-3 mr-1.5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
-                  {searchInfo.query}
-                </div>
-              </div>
-            </div>
+      <div className="space-y-1 ">
+        {/* Searching Stage */}
+        <div className="flex">
+          <span className="mr-3">
+            {searchInfo.stages.includes("searching") ? '[✓]' : '[ ]'}
+          </span>
+          <span className={searchInfo.stages.includes("searching") && !searchInfo.stages.includes("reading") ? 'animate-pulse' : ''}>
+            Searching the web
+          </span>
+        </div>
+        
+        {/* Show query if searching */}
+        {searchInfo.stages.includes("searching") && searchInfo.query && (
+          <div className="ml-6 text-sm text-gray-900">
+            {'>'} {searchInfo.query}
           </div>
         )}
 
         {/* Reading Stage */}
-        {searchInfo.stages.includes("reading") && (
-          <div className="relative">
-            {/* Green dot */}
-            <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-teal-400 rounded-full z-10 shadow-sm"></div>
+        <div className="flex">
+          <span className="mr-2">
+            {searchInfo.stages.includes("reading") ? 
+              (searchInfo.stages.includes("writing") ? '[✓]' : '[●]') : '[ ]'}
+          </span>
+          <span className={searchInfo.stages.includes("reading") && !searchInfo.stages.includes("writing") ? 'animate-pulse' : ''}>
+            Reading
+          </span>
+        </div>
 
-            <div className="flex flex-col">
-              <span className="font-medium mb-2 ml-2">Reading</span>
+        {/* Show URLs if reading */}
+        {searchInfo.stages.includes("reading") && searchInfo.urls && searchInfo.urls.length > 0 && (
+          <div className="ml-6 text-sm text-indigo-700 space-y-0.5">
+            {Array.isArray(searchInfo.urls) ? (
+  searchInfo.urls.slice(0, 3).map((url, index) => (
+    <div key={index}>
+      🌐{" "}
+      {typeof url === "string" ? (
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {url.substring(0, 40)}...
+        </a>
+      ) : (
+        <a
+          href={JSON.stringify(url)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {JSON.stringify(url).substring(0, 40)}...
+        </a>
+      )}
+    </div>
+  ))
+) : (
+  <div>
+    🌐{" "}
+    {typeof searchInfo.urls === "string" ? (
+      <a href={searchInfo.urls} target="_blank" rel="noopener noreferrer">
+        {searchInfo.urls.substring(0, 40)}...
+      </a>
+    ) : (
+      <a
+        href={JSON.stringify(searchInfo.urls)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {JSON.stringify(searchInfo.urls).substring(0, 40)}...
+      </a>
+    )}
+  </div>
+)}
 
-              {/* Search Results */}
-              {searchInfo.urls && searchInfo.urls.length > 0 && (
-                <div className="pl-2 space-y-1">
-                  <div className="flex flex-wrap gap-2">
-                    {Array.isArray(searchInfo.urls) ? (
-                      searchInfo.urls.map((url, index) => (
-                        <div
-                          key={index}
-                          className="bg-gray-100 text-xs px-3 py-1.5 rounded border border-gray-200 truncate max-w-[200px] transition-all duration-200 hover:bg-gray-50"
-                        >
-                          {typeof url === "string"
-                            ? url
-                            : JSON.stringify(url).substring(0, 30)}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="bg-gray-100 text-xs px-3 py-1.5 rounded border border-gray-200 truncate max-w-[200px] transition-all duration-200 hover:bg-gray-50">
-                        {typeof searchInfo.urls === "string"
-                          ? searchInfo.urls.substring(0, 30)
-                          : JSON.stringify(searchInfo.urls).substring(0, 30)}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         )}
+
         {/* Writing Stage */}
-        {searchInfo.stages.includes("writing") && (
-          <div className="relative">
-            {/* Green dot with subtle glow effect */}
-            <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-teal-400 rounded-full z-10 shadow-sm"></div>
-            <span className="font-medium pl-2">Writing answer</span>
-          </div>
-        )}
+        <div className="flex">
+          <span className="mr-2">
+            {searchInfo.stages.includes("writing") ? '[●]' : '[ ]'}
+          </span>
+          
+            Writing answer
+          
+        </div>
 
-        {/* Error Message */}
+        {/* Error Stage */}
         {searchInfo.stages.includes("error") && (
-          <div className="relative">
-            {/* Red dot over the vertical line */}
-            <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-red-400 rounded-full z-10 shadow-sm"></div>
-            <span className="font-medium">Search error</span>
-            <div className="pl-4 text-xs text-red-500 mt-1">
-              {searchInfo.error || "An error occurred during search."}
+          <div>
+            <div className="flex">
+              <span className="mr-2 text-red-400">[✗]</span>
+              <span className="text-red-400">Search error</span>
+            </div>
+            <div className="ml-6 text-xs text-red-300">
+              {'>'} {searchInfo.error || "An error occurred during search."}
             </div>
           </div>
         )}
@@ -104,8 +111,8 @@ const SearchStages = ({ searchInfo }) => {
 const MessageArea = ({ messages }) => {
   return (
     <div
-      className="flex-grow px-4  overflow-y-auto  align-middle   "
-      style={{ minHeight: 0 }}
+      className="flex-grow px-4   overflow-y-auto  align-middle   "
+          style={{ minHeight: 0 }}
     >
       <div className=" ">
         {messages.map((message) => (
@@ -115,16 +122,16 @@ const MessageArea = ({ messages }) => {
               message.isUser ? "justify-end" : "justify-start"
             } mb-5`}
           >
-            <div className="flex  break-words flex-col max-w-3/4 overflow-x-hidden h-fit">
+            <div className="flex flex-col max-w-3/4 break-words overflow-visible">
               {!message.isUser && message.searchInfo && (
                 <SearchStages searchInfo={message.searchInfo} />
               )}
 
               <div
-                className={`rounded-lg py-3 px-5 ${
+                className={`  py-3  px-5 ${
                   message.isUser
-                    ? "bg-gradient-to-br from-neutral-700 to-neutral-900 text-white rounded-br-none shadow-md"
-                    : "bg-neutral-50 text-gray-800  rounded-bl-none shadow-sm"
+                    ? "rightChat  "
+                    : "leftChat "
                 }`}
               >
                 {message.isLoading ? (

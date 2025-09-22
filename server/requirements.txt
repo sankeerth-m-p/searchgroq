@@ -4,3 +4,5 @@ langchain_core
 python_dotenv 
 fastapi 
 langchain_community
+uvicorn
+langchain_tavily

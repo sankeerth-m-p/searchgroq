@@ -1,5 +1,6 @@
 "use client";
 
+import LeftSide from "@/components/Doc";
 import InputBar from "@/components/inputbox";
 import MessageArea from "@/components/messageArea";
 import { Content } from "next/font/google";
@@ -63,7 +64,7 @@ const ChatScreen = ({}) => {
         },
       ]);
 
-      let url = `http://127.0.0.1:8000/chat_stream/${encodeURIComponent(
+      let url = `https://searchgroq.onrender.com/chat_stream/${encodeURIComponent(
         userInput
       )}`;
 
@@ -258,25 +259,25 @@ export default function Home() {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="h-screen p-10 bg-white flex">
+    <div className="h-screen a ovrflow-hidden p-10 bg-emerald-100 flex">
       <div className="h-full rounded-3xl w-full   flex">
-        <div className="brand  absolute bg-white p-2  pr-9   font-bold text-6xl z-50 pb-4 rounded-br-2xl">
+        <div className="brand  absolute bg-emerald-100 retro p-2  pr-9   font-bold text-6xl z-50 pb-4 ">
           SearchGroq
         </div>
 
         <div
-          className={` transition-all bg-white rounded-2xl duration-300 ${
+          className={` transition-all  rounded-2xl duration-300  ${
             expanded ? "w-0" : "w-1/2"
           }`}
-        ></div>
+        ><LeftSide/></div>
         <div
-          className={`bg-black rounded-2xl transition-all duration-300  ${
+          className={`bg-amber-50  retro rounded-2xl transition-all duration-300  ${
             expanded ? "w-full" : "w-1/2"
           }`}
         >
           <button
             onClick={() => setExpanded(!expanded)}
-            className="relative top-1/2 -translate-y-1/2 left-0 transform -translate-x-1/2 z-10  bg-white rounded-full border-4 border-black   cursor-pointer h-10 w-10 justify-center items-center  font-black "
+            className="relative top-1/2 -translate-y-1/2 left-0 transform -translate-x-1/2 z-10  bg-emerald-100 rounded-full border-4 border-black   cursor-pointer h-10 w-10 justify-center items-center  font-black "
           >
             {expanded ? ">" : "<"}
           </button>

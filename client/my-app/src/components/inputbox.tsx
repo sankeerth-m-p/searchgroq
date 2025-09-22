@@ -6,18 +6,18 @@ const InputBar = ({ currentMessage, setCurrentMessage, onSubmit }) => {
   };
   return (
     <form onSubmit={onSubmit} className=" ">
-      <div className="flex items-center rounded-3xl p-3 px-6 justify-between  border-white text-white border-4">
+      <div className="flex items-center  p-3 px-6 justify-between  retro ">
         <input
           type="text"
-          placeholder="Type a message"
+          placeholder="TYPE HERE"
           value={currentMessage}
           onChange={handleChange}
-          className="flex-grow px-2 py-2  focus:outline-none text-white"
+          className="flex-grow px-2 py-2  focus:outline-none text-black font-bold"
         />
 
         <button
           type="submit"
-          className="bg-gradient-to-r from-gray-50 to-gray-300 text-black hover:from-white hover:to-gray-50 rounded-full px-3 py-2 ml-2 shadow-md transition-all duration-200 group"
+          className=" text-black border-4  px-3 py-2 ml-2 bg-white hover: transition-all duration-200 group retroPop"
         >
           send
         </button>
