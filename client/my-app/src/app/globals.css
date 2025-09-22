@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+.a {
+    border-color: rgba(165, 42, 42, 0.304);
+    border-width:5px;
+}
+.brand::after,.brand::before{
+    width: 1.125rem;
+    height: 1.25rem;
+    content: "";
+    position: absolute;
+    
+
+}
+.brand::before{
+    /* background: red; */
+    z-index: 88;
+    top: 0;
+    right: -1rem;
+    border-top-left-radius: 100%;
+    box-shadow: -0.3rem -0.3rem 0px #FFFFFF;
+
+}
+.brand::after{
+    /* background: red; */
+    z-index: 88;
+    left: 0;
+    bottom: -1.2rem;
+    border-top-left-radius: 100%;
+    box-shadow: -0.35rem -0.35rem 0px #FFFFFF;
+
+}
