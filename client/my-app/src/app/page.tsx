@@ -29,7 +29,7 @@ const ChatScreen = ({}) => {
   ]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [checkpointId, setCheckpointId] = useState(null);
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newMessageId =
       messages.length > 0 ? Math.max(...messages.map((msg) => msg.id)) + 1 : 1;
