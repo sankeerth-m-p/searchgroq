@@ -7,7 +7,7 @@ const LeftSide = () => {
       <div className="mb-8 retro bg-white">
         <div className="p-6">
           <p className="mb-4">
-            A <span className="bg-red-400 text-white px-2 py-1 border-2 border-black font-bold">experimental AI playground</span> that combines ChatGroq's lightning-fast responses with live web search. Built as a learning project to explore AI streaming, tool integration, and memory management.
+            A <span className="bg-red-400 text-white px-2 py-1 border-2 border-black font-bold">experimental AI playground</span> that combines ChatGroqs lightning-fast responses with live web search. Built as a learning project to explore AI streaming, tool integration, and memory management.
           </p>
         </div>
       </div>
