@@ -3,22 +3,25 @@
 import LeftSide from "@/components/Doc";
 import InputBar from "@/components/inputbox";
 import MessageArea from "@/components/messageArea";
-import { Content } from "next/font/google";
 import React, { useState } from "react";
-const ChatScreen = ({}) => {
-  interface SearchInfo {
-    stages: string[];
-    query: string;
-    urls: string[];
-  }
-  interface Message {
-    id: number;
-    content: string;
-    isUser: boolean;
-    type: string;
-    isLoading?: boolean;
-    searchInfo?: SearchInfo;
-  }
+
+interface SearchInfo {
+  stages: string[];
+  query: string;
+  urls: string[];
+  error?: string;
+}
+
+interface Message {
+  id: number;
+  content: string;
+  isUser: boolean;
+  type: string;
+  isLoading?: boolean;
+  searchInfo?: SearchInfo;
+}
+
+const ChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -27,10 +30,13 @@ const ChatScreen = ({}) => {
       type: "message",
     },
   ]);
-  const [currentMessage, setCurrentMessage] = useState("");
-  const [checkpointId, setCheckpointId] = useState(null);
+
+  const [currentMessage, setCurrentMessage] = useState<string>("");
+  const [checkpointId, setCheckpointId] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const newMessageId =
       messages.length > 0 ? Math.max(...messages.map((msg) => msg.id)) + 1 : 1;
 
@@ -43,6 +49,7 @@ const ChatScreen = ({}) => {
         type: "message",
       },
     ]);
+
     const userInput = currentMessage;
     setCurrentMessage("");
 
@@ -76,21 +83,20 @@ const ChatScreen = ({}) => {
       // Connect to SSE endpoint using EventSource
       const eventSource = new EventSource(url);
       let streamedContent = "";
-      let searchData = null;
+      let searchData: SearchInfo | null = null;
       let hasReceivedContent = false;
+
       // Process incoming messages
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
 
           if (data.type === "checkpoint") {
-            // Store the checkpoint ID for future requests
             setCheckpointId(data.checkpoint_id);
           } else if (data.type === "content") {
             streamedContent += data.content;
             hasReceivedContent = true;
 
-            // Update message with accumulated content
             setMessages((prev) =>
               prev.map((msg) =>
                 msg.id === aiResponseId
@@ -99,15 +105,13 @@ const ChatScreen = ({}) => {
               )
             );
           } else if (data.type === "search_start") {
-            // Create search info with 'searching' stage
-            const newSearchInfo = {
+            const newSearchInfo: SearchInfo = {
               stages: ["searching"],
               query: data.query,
               urls: [],
             };
             searchData = newSearchInfo;
 
-            // Update the AI message with search info
             setMessages((prev) =>
               prev.map((msg) =>
                 msg.id === aiResponseId
@@ -122,23 +126,20 @@ const ChatScreen = ({}) => {
             );
           } else if (data.type === "search_results") {
             try {
-              // Parse URLs from search results
               const urls =
                 typeof data.urls === "string"
                   ? JSON.parse(data.urls)
                   : data.urls;
 
-              // Update search info to add 'reading' stage (don't replace 'searching')
-              const newSearchInfo = {
+              const newSearchInfo: SearchInfo = {
                 stages: searchData
                   ? [...searchData.stages, "reading"]
                   : ["reading"],
                 query: searchData?.query || "",
-                urls: urls,
+                urls,
               };
               searchData = newSearchInfo;
 
-              // Update the AI message with search info
               setMessages((prev) =>
                 prev.map((msg) =>
                   msg.id === aiResponseId
@@ -155,8 +156,7 @@ const ChatScreen = ({}) => {
               console.error("Error parsing search results:", err);
             }
           } else if (data.type === "search_error") {
-            // Handle search error
-            const newSearchInfo = {
+            const newSearchInfo: SearchInfo = {
               stages: searchData ? [...searchData.stages, "error"] : ["error"],
               query: searchData?.query || "",
               error: data.error,
@@ -177,9 +177,8 @@ const ChatScreen = ({}) => {
               )
             );
           } else if (data.type === "end") {
-            // When stream ends, add 'writing' stage if we had search info
             if (searchData) {
-              const finalSearchInfo = {
+              const finalSearchInfo: SearchInfo = {
                 ...searchData,
                 stages: [...searchData.stages, "writing"],
               };
@@ -200,12 +199,10 @@ const ChatScreen = ({}) => {
         }
       };
 
-      // Handle errors
       eventSource.onerror = (error) => {
         console.error("EventSource error:", error);
         eventSource.close();
 
-        // Only update with error if we don't have content yet
         if (!streamedContent) {
           setMessages((prev) =>
             prev.map((msg) =>
@@ -222,7 +219,6 @@ const ChatScreen = ({}) => {
         }
       };
 
-      // Listen for end event
       eventSource.addEventListener("end", () => {
         eventSource.close();
       });
@@ -240,10 +236,10 @@ const ChatScreen = ({}) => {
       ]);
     }
   };
+
   return (
-    <div className="    flex justify-center p-10  h-full overflow-hidden">
-      <div className={" w-full  p-10 flex flex-col   overflow-hidden  max-w-300"}>
-        
+    <div className="flex justify-center p-10 h-full overflow-hidden">
+      <div className="w-full p-10 flex flex-col overflow-hidden max-w-300">
         <MessageArea messages={messages} />
         <InputBar
           currentMessage={currentMessage}
@@ -259,25 +255,28 @@ export default function Home() {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="h-screen a ovrflow-hidden p-10 bg-emerald-100 flex">
-      <div className="h-full rounded-3xl w-full   flex">
-        <div className="brand  absolute bg-emerald-100 retro p-2  pr-9   font-bold text-6xl z-50 pb-4 ">
+    <div className="h-screen ovrflow-hidden p-10 bg-emerald-100 flex">
+      <div className="h-full rounded-3xl w-full flex">
+        <div className="brand absolute bg-emerald-100 retro p-2 pr-9 font-bold text-6xl z-50 pb-4">
           SearchGroq
         </div>
 
         <div
-          className={` transition-all  rounded-2xl duration-300  ${
+          className={`transition-all rounded-2xl duration-300 ${
             expanded ? "w-0" : "w-1/2"
           }`}
-        ><LeftSide/></div>
+        >
+          <LeftSide />
+        </div>
+
         <div
-          className={`bg-amber-50  retro rounded-2xl transition-all duration-300  ${
+          className={`bg-amber-50 retro rounded-2xl transition-all duration-300 ${
             expanded ? "w-full" : "w-1/2"
           }`}
         >
           <button
             onClick={() => setExpanded(!expanded)}
-            className="relative top-1/2 -translate-y-1/2 left-0 transform -translate-x-1/2 z-10  bg-emerald-100 rounded-full border-4 border-black   cursor-pointer h-10 w-10 justify-center items-center  font-black "
+            className="relative top-1/2 -translate-y-1/2 left-0 transform -translate-x-1/2 z-10 bg-emerald-100 rounded-full border-4 border-black cursor-pointer h-10 w-10 justify-center items-center font-black"
           >
             {expanded ? ">" : "<"}
           </button>
