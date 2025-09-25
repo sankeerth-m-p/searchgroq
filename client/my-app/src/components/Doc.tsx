@@ -2,7 +2,7 @@ import React from 'react';
 
 const LeftSide = () => {
   return (
-    <div className="pt-32 px-10 h-full overflow-hidden content-end bottom-0">
+    <div className="pt-32 px-10 h-full overflow-y-auto content-end bottom-0">
       {/* Description Section */}
       <div className="mb-8 retro bg-white">
         <div className="p-6">
